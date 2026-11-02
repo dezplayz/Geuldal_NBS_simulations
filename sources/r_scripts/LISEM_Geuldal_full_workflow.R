@@ -414,7 +414,7 @@ create_lisem_run(
   catch_num = 52,
   swatre_file = swatre_nbs_file,
   run_type = "base",
-  con_type = "landex1"
+  con_type = "landex1",
   do_runfile = T,
   NBS_num = 122,
   cpu_cores = 8
