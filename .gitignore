@@ -26,3 +26,8 @@ fieldwork/*
 *.zip
 sources/setup/calibration/cal_OM_swatre.csv
 sources/setup/calibration/swatre_NBS.csv
+
+# Thesis: large data and model output (not versioned)
+spatial_data/
+LISEM_data/
+LISEM_runs/
