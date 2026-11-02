@@ -463,7 +463,7 @@ create_lisem_run <- function(
     
     # in case of multiple follow the correct order
     # filter the numbers from nums that need to be executed
-    measures <- c(19, 17, 20, 21) # specific order of adding the measures
+    measures <- c(19, 17, 20, 21, 29) # specific order of adding the measures
     nums <- measures[measures %in% nums]
     
     for (i in seq_along(nums)) {
@@ -568,6 +568,25 @@ create_lisem_run <- function(
         
       }    
       
+      # Tijdelijke overstromingsgebieden - 29
+      if (n == 29) {
+        # find properties from table
+        prop <- nbs_prop %>%
+          filter(lu_nr == n)
+        
+        max_damheight  <- filter(prop, property == "max_damheight")$value 
+        # [m] give the max height of dams compared to original dem elevation
+        
+        # adjust pcraster script if this is a scenario of single nbs simulation
+        if(single_nbs == TRUE) single <- 1 else single = 0
+        
+        # add flood dams to dem with pcraster script
+        pcr_script(
+          script = paste0("flood_dams.mod ", max_damheight, " ", single),
+          script_dir = "sources/pcr_scripts",
+          work_dir = subdir)
+
+      }    
     }
   
   # clean up  
