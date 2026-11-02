@@ -1,0 +1,6 @@
+﻿name: lisem
+channels:
+dependencies:
+  - python=3.13
+  - pcraster
+  - gdal
