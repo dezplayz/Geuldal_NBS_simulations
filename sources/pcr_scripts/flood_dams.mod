@@ -11,14 +11,22 @@ binding
 dem = dem.map;
 landuse = landuse.map;
 
-# output maps
-updated = updated_dem.map;
+# the maximum height of the dam (compared to original dem elevation)
+max_damheight = ${1};
+
+# single nbs (1) or scenario with multiple measures (0)? 
+single = ${2};
 
 initial
 area = dem * 0 + 1;
 
+# This function currently does nothing, as there is no single measure Stroming map
+# for this specific NBS. As such, measure_num will always be 29, this function is only
+# included incase a single measure map is made and to be consistent with the rest of the workflow.  
+measure_num = if(single eq 1, 29, 29);
+
 # Identify cells with NBS_ID for flood area dams (NBS_ID = 29).
-Dams = landuse == 29;
+Dams = landuse == measure_num;
 
 # Assign separate IDs to each line of cells to separate the different dams.
 LineID = clump(Dams); 
@@ -42,7 +50,7 @@ Lowest_elevation = areaminimum(dem, LineID);
 
 # Set a threshold for the two different options for dam height. This is calculated as the lowest
 # elevation along the dam line plus the maximum dam height variable.
-Threshold = Lowest_elevation + 1.5;
+Threshold = Lowest_elevation + max_damheight;
 
 # The correct height option for each dam line is chosen.
 # Option 1: If Threshold is lower than Min_Height, Dam_Height becomes Threshold. 
@@ -53,10 +61,4 @@ Dam_Height = if(Threshold < Min_Height, Threshold, Min_Height);
 
 # The cells will be raised to the correct dam height, dependent on which option is chosen.
 # note: cells will only be raised, never lowered.
-report updated = if(Dams, max(dem, Dam_Height), dem);
-
-# for testing if the procedure works: calculate the difference between the original
-# dem and updated dem.
-
-#Difference = updated - dem;
-#report test_difference.map = Difference;
+report dem = if(Dams, max(dem, Dam_Height), dem);
